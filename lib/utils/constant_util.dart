@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class K {
+    // Constant number section
+    static const double doubleNum25 = 25.0;
+  
     // Color section
     static const primaryColor = Color(0xFF899FEB);
     static const bottomQRBgColor = Color(0xFF6D89EA);
@@ -14,5 +17,9 @@ class K {
 
   // TextStyle section
   static const bottomIconTextStyle = TextStyle(color: bottomNavIconColor, fontSize: 12);
+  static const headerTitleTextStyle = TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w600);
+  static const headerBoxTitleTextStyle = TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold);
+  static const headerBoxSubtitleTextStyle = TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.normal);
+  
 
 }
