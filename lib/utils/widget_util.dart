@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class WidgetUtil {
+class WidgetFnUtil {
   static Future displayBottomSheet({
     required BuildContext context,
-    required List<Widget> widget,
+    required List<Widget> children,
   }) async {
     await showModalBottomSheet(
       context: context,
@@ -12,7 +12,7 @@ class WidgetUtil {
       ),
       builder: (context) {
         return ListView(
-          children: widget.toList(),
+          children: children.toList(),
         );
       },
     );

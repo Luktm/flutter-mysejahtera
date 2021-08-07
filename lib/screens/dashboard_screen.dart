@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mysejahtera_app/models/group_user.dart';
+import 'package:mysejahtera_app/models/location.dart';
+import 'package:mysejahtera_app/models/vacinne.dart';
 import 'package:mysejahtera_app/utils/constant_util.dart';
 import 'package:mysejahtera_app/utils/widget_util.dart';
 import 'package:mysejahtera_app/widgets/color_button_widget.dart';
@@ -35,6 +37,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
       name: 'Lee',
       imagePath: 'assets/images/lcw.jpeg',
     ),
+  ];
+
+  List<Location> _locationList = [
+    Location(id: Random().nextInt(1000), name: 'UM', selected: false),
+    Location(id: Random().nextInt(1000), name: 'PWTC', selected: false),
+    Location(id: Random().nextInt(1000), name: 'UKM', selected: false),
+    Location(id: Random().nextInt(1000), name: 'SUNWAY', selected: false)
+  ];
+
+  List<Vaccine> _vaccineList = [
+    Vaccine(id: Random().nextInt(1000), name: 'Pfizer', selected: false),
+    Vaccine(id: Random().nextInt(1000), name: 'AztraZeneca', selected: false),
+    Vaccine(id: Random().nextInt(1000), name: 'Sinovac', selected: false)
   ];
 
   Widget _buildHeaderOverviewCardButton({
@@ -248,7 +263,61 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       scrollDirection: Axis.horizontal,
                       children: [
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            WidgetFnUtil.displayBottomSheet(
+                              context: context,
+                              children: [
+                                sizedBox20h,
+                                _buildRegisterVaccineTitle(
+                                  icon: Icons.location_on,
+                                  title: 'Select a location',
+                                  subTitle: 'KUALA LUMPUR',
+                                ),
+                                sizedBox20h,
+                                _buildRegisterVaccineXScrollWiget(
+                                    items: _locationList,
+                                    amount: _locationList.length),
+                                sizedBox20h,
+                                divider,
+                                sizedBox20h,
+                                _buildRegisterVaccineTitle(
+                                  icon: Icons.circle_outlined,
+                                  title: 'Select preferred vaccine',
+                                ),
+                                sizedBox20h,
+                                _buildRegisterVaccineXScrollWiget(
+                                  items: _vaccineList,
+                                  amount: _vaccineList.length,
+                                ),
+                                sizedBox20h,
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: K.doubleNum25,
+                                  ),
+                                  child: ColorButtonWidget(
+                                    onPressed: () {},
+                                    buttonText: "I'm feeling lucky",
+                                    primaryColor: Colors.black12,
+                                  ),
+                                ),
+                                sizedBox20h,
+                                divider,
+                                sizedBox20h,
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: K.doubleNum25,
+                                  ),
+                                  child: ColorButtonWidget(
+                                    onPressed: () {},
+                                    buttonText: "Continue",
+                                    primaryColor: Colors.blueAccent,
+                                    textColor: Colors.white,
+                                  ),
+                                ),
+                                sizedBox30h,
+                              ],
+                            );
+                          },
                           child: Image.asset('assets/images/vaccine.png'),
                         ),
                         Image.asset('assets/images/vaccine.png'),
@@ -289,7 +358,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   sizedBox20h,
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: K.doubleNum25),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -303,9 +373,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           icon: groupCheckInIcon,
                           title: 'Group\ncheck-in',
                           onPressed: () {
-                            WidgetUtil.displayBottomSheet(
+                            WidgetFnUtil.displayBottomSheet(
                               context: context,
-                              widget: [
+                              children: [
                                 sizedBox30h,
                                 Icon(groupCheckInIcon,
                                     color: K.lightBlueColor, size: 70),
@@ -317,7 +387,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 sizedBox20h,
                                 divider,
                                 Padding(
-                                  padding: EdgeInsets.all(20.0),
+                                  padding: EdgeInsets.all(K.doubleNum25),
                                   child: Row(
                                     children: [
                                       Icon(
@@ -340,7 +410,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       4,
                                       (index) => Padding(
                                         padding: const EdgeInsets.symmetric(
-                                          horizontal: 20,
+                                          horizontal: K.doubleNum25,
                                         ),
                                         child: Column(
                                           mainAxisAlignment:
@@ -372,6 +442,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     horizontal: K.doubleNum25,
                                   ),
                                   child: ColorButtonWidget(
+                                    onPressed: () {},
                                     icon: Icons.add,
                                     buttonText: 'Add new favourite',
                                     primaryColor: Colors.grey[200],
@@ -386,6 +457,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     horizontal: K.doubleNum25,
                                   ),
                                   child: ColorButtonWidget(
+                                    onPressed: () {},
                                     buttonText: 'Scan Check-in QR',
                                     primaryColor: K.lightBlueColor,
                                   ),
@@ -414,6 +486,66 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildRegisterVaccineTitle({
+    required IconData icon,
+    required String title,
+    String? subTitle,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: K.doubleNum25),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.blueAccent, size: 30),
+          SizedBox(width: 15),
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+              fontSize: 18,
+            ),
+          ),
+          Spacer(),
+          Text(
+            subTitle ?? '',
+            style: TextStyle(
+              color: Colors.black38,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRegisterVaccineXScrollWiget(
+      {required List<dynamic> items, required int amount}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: K.doubleNum25,
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(
+            amount,
+            (index) => Row(
+              children: [
+                ColorButtonWidget(
+                  buttonText: items[index].name,
+                  primaryColor: Colors.black12,
+                  onPressed: () {},
+                ),
+                SizedBox(width: 20),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
