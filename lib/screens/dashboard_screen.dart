@@ -16,6 +16,10 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  Location? selectedLocation;
+
+  Vaccine? selectedVaccine;
+
   List<GroupUser> _avatarPathList = [
     GroupUser(
       id: Random().nextInt(1000),
@@ -275,8 +279,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                                 sizedBox20h,
                                 _buildRegisterVaccineXScrollWiget(
-                                    items: _locationList,
-                                    amount: _locationList.length),
+                                  items: _locationList,
+                                  amount: _locationList.length,
+                                  isLocation: true,
+                                ),
                                 sizedBox20h,
                                 divider,
                                 sizedBox20h,
@@ -377,8 +383,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               context: context,
                               children: [
                                 sizedBox30h,
-                                Icon(groupCheckInIcon,
-                                    color: K.lightBlueColor, size: 70),
+                                Icon(
+                                  groupCheckInIcon,
+                                  color: K.lightBlueColor,
+                                  size: 70,
+                                ),
                                 Text(
                                   'Group Check-in',
                                   style: K.headerBoxTitleTextStyle,
@@ -395,43 +404,96 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         color: K.lightBlueColor,
                                       ),
                                       SizedBox(width: 10),
-                                      Text('Who are you checking-in with?',
-                                          style: K.headerBoxTitleTextStyle
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w500)),
+                                      Text(
+                                        'Who are you checking-in with?',
+                                        style:
+                                            K.headerBoxTitleTextStyle.copyWith(
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: List.generate(
-                                      4,
-                                      (index) => Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: K.doubleNum25,
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 30,
-                                              backgroundImage: AssetImage(
-                                                _avatarPathList[index]
-                                                    .imagePath,
+                                StatefulBuilder(
+                                  builder: (ctx, setState) => SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: List.generate(
+                                        4,
+                                        (index) {
+                                            bool isAvatarSelected = _avatarPathList[index].selected;
+                                          return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: K.doubleNum25,
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _avatarPathList[index]
+                                                        .updateSelected();
+                                                  });
+                                                },
+                                                child: Stack(
+                                                      children: [
+                                                        CircleAvatar(
+                                                          radius: 33,
+                                                          backgroundColor:
+                                                              isAvatarSelected
+                                                                  ? K
+                                                                      .lightBlueColor
+                                                                  : Colors
+                                                                      .transparent,
+                                                          child: CircleAvatar(
+                                                            radius: 30,
+                                                            backgroundImage:
+                                                                AssetImage(
+                                                              _avatarPathList[
+                                                                      index]
+                                                                  .imagePath,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        if (isAvatarSelected)
+                                                          Positioned(
+                                                            bottom: 2,
+                                                            right: 0,
+                                                            left: 40,
+                                                            child: CircleAvatar(
+                                                              radius: 10,
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        if (isAvatarSelected)
+                                                          Positioned(
+                                                            bottom: 0,
+                                                            right: 0,
+                                                            left: 40,
+                                                            child: Icon(
+                                                                Icons
+                                                                    .check_circle_rounded,
+                                                                color: K
+                                                                    .lightBlueColor),
+                                                          ),
+                                                      ],
+                                                    ),
                                               ),
-                                            ),
-                                            SizedBox(height: 10),
-                                            Text(
-                                              _avatarPathList[index].name,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w500,
+                                              SizedBox(height: 10),
+                                              Text(
+                                                _avatarPathList[index].name,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
+                                            ],
+                                          ),
+                                        );
+                                        },
                                       ),
                                     ),
                                   ),
@@ -460,6 +522,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     onPressed: () {},
                                     buttonText: 'Scan Check-in QR',
                                     primaryColor: K.lightBlueColor,
+                                    textColor: Colors.white,
                                   ),
                                 ),
                                 sizedBox30h,
@@ -522,27 +585,52 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildRegisterVaccineXScrollWiget(
-      {required List<dynamic> items, required int amount}) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: K.doubleNum25,
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(
-            amount,
-            (index) => Row(
-              children: [
-                ColorButtonWidget(
-                  buttonText: items[index].name,
-                  primaryColor: Colors.black12,
-                  onPressed: () {},
-                ),
-                SizedBox(width: 20),
-              ],
+  Widget _buildRegisterVaccineXScrollWiget({
+    required List<dynamic> items,
+    required int amount,
+    bool isLocation = false,
+  }) {
+    return StatefulBuilder(
+      builder: (ctx, setState) => Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: K.doubleNum25,
+        ),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(
+              amount,
+              (index) {
+                bool vaccineLocationCondition =
+                    selectedLocation == items[index] ||
+                        selectedVaccine == items[index];
+                return Row(
+                  children: [
+                    ColorButtonWidget(
+                      buttonText: items[index].name,
+                      textColor: vaccineLocationCondition
+                          ? Colors.white
+                          : Colors.black,
+                      primaryColor: vaccineLocationCondition
+                          ? Colors.blueAccent
+                          : Colors.black12,
+                      onPressed: () {
+                        setState(
+                          () {
+                            if (isLocation) {
+                              selectedLocation = items[index];
+                            } else {
+                              selectedVaccine = items[index];
+                            }
+                          },
+                        );
+                      },
+                    ),
+                    SizedBox(width: 20),
+                  ],
+                );
+              },
             ),
           ),
         ),
